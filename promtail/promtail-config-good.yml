@@ -1,0 +1,29 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: optimized_services
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: demo-apps-optimized
+          __path__: /var/log/apps-optimized/*.log
+    pipeline_stages:
+      # Parse the JSON log line
+      - json:
+          expressions:
+            service: service
+            level: level
+      # OPTIMIZED PATTERN: Only index stable, low-cardinality labels!
+      # Dynamic IDs (request_id, user_id, order_id) remain safely in the log message body.
+      - labels:
+          service:
+          level:
