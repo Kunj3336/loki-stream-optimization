@@ -1,13 +1,13 @@
 # Loki Stream & Cardinality Optimization
 
 ## 1. Problem / Task
-Task: specified the following operational objective[cite: 17]:
-> *"Audit Loki chunks. Find which services are sending high-cardinality labels (dynamic IDs in labels) that slow down queries and increase cost. Create documentation about this."*[cite: 17]
+Task:
+> *"Audit Loki chunks. Find which services are sending high-cardinality labels (dynamic IDs in labels) that slow down queries and increase cost. Create documentation about this."*
 
 ### Key Operational Challenges & Architectural Realities:
-* **The Stream Explosion Anti-Pattern:** Unlike Elasticsearch or relational databases, Grafana Loki does not build a full-text index on log content[cite: 21]. Instead, Loki indexes *only* label key-value pairs[cite: 21]. Every distinct combination of labels creates an independent time-series stream with its own chunk files[cite: 21].
-* **High-Cardinality Impact:** When services attach high-cardinality dynamic values (e.g., `request_id`, `user_id`, `order_id`) as indexed stream labels, every single log event creates a brand-new stream[cite: 17, 20, 21]. This results in massive chunk fragmentation, high memory consumption in the Loki ingester, and severe LogQL query latency[cite: 17, 21].
-* **Controlled Lab Implementation:** Because corporate production Loki chunks were unavailable, a controlled local environment was created with multi-service traffic generation, deliberate anti-patterns, stream audits, and post-optimization validation[cite: 19, 23].
+* **The Stream Explosion Anti-Pattern:** Unlike Elasticsearch or relational databases, Grafana Loki does not build a full-text index on log content[cite: 21]. Instead, Loki indexes *only* label key-value pairs. Every distinct combination of labels creates an independent time-series stream with its own chunk files.
+* **High-Cardinality Impact:** When services attach high-cardinality dynamic values (e.g., `request_id`, `user_id`, `order_id`) as indexed stream labels, every single log event creates a brand-new stream. This results in massive chunk fragmentation, high memory consumption in the Loki ingester, and severe LogQL query latency.
+* **Controlled Lab Implementation:** Because corporate production Loki chunks were unavailable, a controlled local environment was created with multi-service traffic generation, deliberate anti-patterns, stream audits, and post-optimization validation.
 
 ---
 
@@ -15,10 +15,10 @@ Task: specified the following operational objective[cite: 17]:
 
 ### Architecture Overview
 We provisioned an isolated observability pipeline using Docker Compose:
-* **Loki**: Centralized log storage, chunk indexing, and LogQL query evaluation[cite: 19].
-* **Promtail**: Log collector and shipper responsible for extracting pipeline stages and attaching stream labels[cite: 19].
-* **Grafana**: Visual analytics, stream exploration, and LogQL query inspection[cite: 19, 20].
-* **Python Automation**: Workload generators and Loki API audit scripts[cite: 19].
+* **Loki**: Centralized log storage, chunk indexing, and LogQL query evaluation.
+* **Promtail**: Log collector and shipper responsible for extracting pipeline stages and attaching stream labels.
+* **Grafana**: Visual analytics, stream exploration, and LogQL query inspection.
+* **Python Automation**: Workload generators and Loki API audit scripts.
 
 ```
 loki-stream-optimization/
