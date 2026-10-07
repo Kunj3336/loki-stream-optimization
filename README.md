@@ -320,44 +320,44 @@ print("=" * 75)
 ## 3. Results & Visual Evidence
 
 ### Cardinality Audit Findings
-* **Unoptimized Streams Created**: `600` active streams across 600 log lines (1:1 stream fragmentation)[cite: 26].
+* **Unoptimized Streams Created**: `600` active streams across 600 log lines (1:1 stream fragmentation).
 * **High-Cardinality Labels Identified**:
-  * `request_id`: 600 distinct values (100% unique per request)[cite: 26]
-  * `user_id`: 574 distinct values[cite: 26]
-  * `order_id`: 216 distinct values[cite: 26]
-* **Culprit Services**: `api` (175 streams), `orders` (217 streams), `auth` (208 streams)[cite: 26].
+  * `request_id`: 600 distinct values (100% unique per request)
+  * `user_id`: 574 distinct values
+  * `order_id`: 216 distinct values
+* **Culprit Services**: `api` (175 streams), `orders` (217 streams), `auth` (208 streams).
 
 ### Before vs. After Optimization Metrics
 | Metric | Baseline (Bad Labels) | Optimized (Good Labels) | Impact |
 |---|---|---|---|
 | **Active Stream Count** | 600 streams[cite: 26] | 9 streams | **98.50% reduction** |
-| **Stream Label Overhead** | Unbounded (Dynamic UUIDs)[cite: 20, 26] | Bounded (`service`, `level` only)[cite: 21] | Index memory stabilized |
-| **Dynamic ID Searchability** | Searchable via indexed label | Searchable via log line/body (`\|=`) | **100% data preserved**[cite: 27] |
+| **Stream Label Overhead** | Unbounded (Dynamic UUIDs) | Bounded (`service`, `level` only) | Index memory stabilized |
+| **Dynamic ID Searchability** | Searchable via indexed label | Searchable via log line/body (`\|=`) | **100% data preserved** |
 
 ---
 
 ### Visual Evidence & Screenshots
 
 #### 1. Loki Datasource Verification
-Loki service connected and verified in Grafana[cite: 20]:
+Loki service connected and verified in Grafana:
 ![Grafana Loki Datasource](evidence/screenshots/01_grafana_loki_datasource.png)
 
 ***
 
 #### 2. High-Cardinality Label Explosion in Grafana
-Unoptimized streams showing unique UUID labels attached to individual log events[cite: 20]:
+Unoptimized streams showing unique UUID labels attached to individual log events:
 ![Bad High Cardinality Labels](evidence/screenshots/02_bad_high_cardinality_labels.png)
 
 ***
 
 #### 3. Baseline Cardinality Audit Terminal Output
-Automated audit identifying culprit services and critical label cardinality[cite: 26]:
+Automated audit identifying culprit services and critical label cardinality:
 ![Baseline Cardinality Audit](evidence/screenshots/03_baseline_cardinality_audit.png)
 
 ***
 
 #### 4. Searchability of Dynamic Identifiers Post-Optimization
-Full text / field search of dynamic IDs (`|= "user_"`) retained without stream label bloat[cite: 21, 27]:
+Full text / field search of dynamic IDs (`|= "user_"`) retained without stream label bloat:
 ![Optimized Searchability](evidence/screenshots/04_optimized_searchability.png)
 
 ***
