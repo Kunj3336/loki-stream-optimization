@@ -1,7 +1,7 @@
 # Loki Stream & Cardinality Optimization
 
 ## 1. Problem / Task
-specified the following operational objective[cite: 17]:
+Task: specified the following operational objective[cite: 17]:
 > *"Audit Loki chunks. Find which services are sending high-cardinality labels (dynamic IDs in labels) that slow down queries and increase cost. Create documentation about this."*[cite: 17]
 
 ### Key Operational Challenges & Architectural Realities:
